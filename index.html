@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vizuální Komiksový Rozcestník</title>
+    <title>Vizuální komiksový rozcestník</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
-    <!-- Updated Lucide Script Source -->
     <script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js"></script>
     <style>
         body {
@@ -92,11 +91,24 @@
             margin-left: -10px;
             margin-bottom: -20px;
         }
+        .card-image-container {
+            border: 3px solid #000;
+            overflow: hidden;
+            aspect-ratio: 1 / 1;
+        }
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .card:hover .card-image {
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- Header Section -->
     <header class="bg-yellow-400 border-b-4 border-black py-8 relative overflow-hidden">
         <div class="absolute top-0 right-0 opacity-10 transform rotate-12 translate-x-10 -translate-y-10">
             <i data-lucide="message-circle" class="w-64 h-64 text-black"></i>
@@ -112,17 +124,14 @@
         </div>
     </header>
 
-    <!-- Controls Section -->
     <div class="container mx-auto px-4 py-8 sticky top-0 z-30 bg-[#f0f4f8]/95 backdrop-blur-sm border-b-2 border-black/10 pb-4 mb-4">
         <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
             
-            <!-- Search -->
             <div class="w-full md:w-1/3 relative">
                 <input type="text" id="searchInput" placeholder="Hledej autora nebo styl..." class="search-input w-full p-3 rounded-lg text-lg font-bold pl-10">
                 <i data-lucide="search" class="absolute left-3 top-3.5 w-5 h-5 text-gray-500"></i>
             </div>
 
-            <!-- Filters -->
             <div class="flex flex-wrap gap-2 justify-center" id="filterContainer">
                 <button class="filter-btn active px-4 py-2 rounded-full bg-white text-black" data-filter="all">Vše</button>
                 <button class="filter-btn px-4 py-2 rounded-full bg-blue-100 text-blue-900 border-blue-900 hover:bg-blue-900" data-filter="czech">🇨🇿 Čeští tvůrci</button>
@@ -132,13 +141,10 @@
         </div>
     </div>
 
-    <!-- Main Grid -->
     <main class="container mx-auto px-4 pb-16 flex-grow">
         <div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <!-- Cards will be injected here via JS -->
-        </div>
+            </div>
         
-        <!-- No Results State -->
         <div id="noResults" class="hidden text-center py-20">
             <i data-lucide="ghost" class="w-20 h-20 mx-auto text-gray-400 mb-4"></i>
             <h3 class="text-3xl text-gray-600 comic-font">Jejda! Nic tu není.</h3>
@@ -146,7 +152,6 @@
         </div>
     </main>
 
-    <!-- Footer -->
     <footer class="bg-black text-white py-8 mt-auto border-t-4 border-black">
         <div class="container mx-auto px-4 text-center">
             <p class="font-comic text-lg">Vytvořeno pro podporu komiksové gramotnosti na středních školách.</p>
@@ -157,14 +162,15 @@
     <script>
         // Data Source
         const comicsData = [
-            // --- CZECH CREATORS (Zpracováno ze záložek) ---
+            // --- CZECH CREATORS ---
             {
                 name: "Štěpánka Jislová",
                 url: "https://www.jislova.com/",
                 category: "czech",
                 tags: ["Grafický román", "Ilustrace", "Autobiografie"],
                 desc: "Výrazná autorka grafických románů (Bez vlasů, Srdcovka). Moderní vizuální styl a silná témata.",
-                color: "bg-pink-100"
+                color: "bg-pink-100",
+                image: "jislova.jpg"
             },
             {
                 name: "Nikkarin",
@@ -172,7 +178,8 @@
                 category: "czech",
                 tags: ["Sci-fi", "Dobrodružné", "Hravost"],
                 desc: "Autor kultovní série '130' a hravých stripů. Skvělý smysl pro detail a budování světů.",
-                color: "bg-blue-100"
+                color: "bg-blue-100",
+                image: "nikkarin.jpg"
             },
             {
                 name: "Lucie Lomová",
@@ -180,7 +187,8 @@
                 category: "czech",
                 tags: ["Klasika", "Detektivní", "Děti i dospělí"],
                 desc: "Legenda českého komiksu (Anča a Pepík), autorka oceňovaných grafických románů (Divoši).",
-                color: "bg-purple-100"
+                color: "bg-purple-100",
+                image: "lomova.jpg"
             },
             {
                 name: "Dan Černý",
@@ -188,7 +196,18 @@
                 category: "czech",
                 tags: ["Humor", "Strips", "Horor-komedie"],
                 desc: "Král českého humorného stripu a komiksu (Jelita, Fanouš). Čistá linka a břitký humor.",
-                color: "bg-yellow-100"
+                color: "bg-yellow-100",
+                image: "dan_cerny.jpg"
+            },
+            // NOVÝ: Petr Kopl (vedle Svitalského)
+            {
+                name: "Petr Kopl",
+                url: "https://petr-kopl-ilustrator.webnode.cz/",
+                category: "czech",
+                tags: ["Adaptace", "Morgavsa", "Humor"],
+                desc: "Autor populárních adaptací klasické literatury a série o Morgavse. Specifický 'cartoon' styl.",
+                color: "bg-amber-50",
+                image: "kopl.jpg"
             },
             {
                 name: "Jiří Grus",
@@ -196,7 +215,8 @@
                 category: "czech",
                 tags: ["Akční", "Realistická kresba", "Voleman"],
                 desc: "Mistr dynamické kresby a anatomie. Autor série Voleman a Dračí hlídka.",
-                color: "bg-red-100"
+                color: "bg-red-100",
+                image: "grus.jpg"
             },
              {
                 name: "Kateřina Čupová",
@@ -204,7 +224,8 @@
                 category: "czech",
                 tags: ["Fantasy", "Surrealismus", "Barvy"],
                 desc: "Autorka komiksu 'Hrnec' a adaptace 'R.U.R.'. Úžasná práce s barvou a atmosférou.",
-                color: "bg-green-100"
+                color: "bg-green-100",
+                image: "cupova_katerina.jpg"
             },
             {
                 name: "Jaromír 99",
@@ -212,7 +233,8 @@
                 category: "czech",
                 tags: ["Noir", "Atmosféra", "Alois Nebel"],
                 desc: "Spoluautor Aloise Nebela a Zátopka. Charakteristický černobílý styl připomínající dřevořez.",
-                color: "bg-gray-200"
+                color: "bg-gray-200",
+                image: "jaromir99.jpg"
             },
             {
                 name: "Karel Jerie",
@@ -220,7 +242,8 @@
                 category: "czech",
                 tags: ["Steampunk", "Houbaři", "Historie"],
                 desc: "Osobitý styl plný detailů, houbových monster a historických odkazů (Candide).",
-                color: "bg-orange-100"
+                color: "bg-orange-100",
+                image: "jerie.jpg"
             },
             {
                 name: "Branko Jelinek",
@@ -228,7 +251,8 @@
                 category: "czech",
                 tags: ["Psychologický", "Temný", "Oskar Ed"],
                 desc: "Autor náročnějších, psychologicky hlubokých děl. Vhodné pro starší studenty.",
-                color: "bg-slate-300"
+                color: "bg-slate-300",
+                image: "jelinek.jpg"
             },
             {
                 name: "Pavel Čech",
@@ -236,7 +260,8 @@
                 category: "czech",
                 tags: ["Poetika", "Tajemství", "Bez slov"],
                 desc: "Tajemné a poetické příběhy často beze slov. Rychlé šípy, Velké dobrodružství Pepíka Střechy.",
-                color: "bg-indigo-100"
+                color: "bg-indigo-100",
+                image: "cech.jpg"
             },
             {
                 name: "Michael Petrus",
@@ -244,7 +269,8 @@
                 category: "czech",
                 tags: ["Digitální umění", "Ilustrace", "Komiks"],
                 desc: "Art director a ilustrátor se zaměřením na moderní digitální komiks a brand design.",
-                color: "bg-cyan-100"
+                color: "bg-cyan-100",
+                image: "petrus.jpg"
             },
              {
                 name: "Tomáš Kučerovský",
@@ -252,7 +278,8 @@
                 category: "czech",
                 tags: ["Kresba", "Architektura", "Detaily"],
                 desc: "Precizní kreslíř a ilustrátor. Jeho komiksová tvorba vyniká technickou zdatností.",
-                color: "bg-emerald-100"
+                color: "bg-emerald-100",
+                image: "kucerovsky.jpg"
             },
             {
                 name: "Marek Rubec",
@@ -260,7 +287,8 @@
                 category: "czech",
                 tags: ["Minimalismus", "Atmosféra", "Jarmil"],
                 desc: "Autor komiksu Jarmil. Minimalistický styl, suchý humor a existenciální témata.",
-                color: "bg-teal-100"
+                color: "bg-teal-100",
+                image: "rubec.jpg"
             },
              {
                 name: "Václav Šlajch",
@@ -268,7 +296,18 @@
                 category: "czech",
                 tags: ["Fantasy", "Groteska", "Stylizace"],
                 desc: "Výrazný plzeňský autor s nezaměnitelným, lehce groteskním stylem kresby.",
-                color: "bg-lime-100"
+                color: "bg-lime-100",
+                image: "slajch.jpg"
+            },
+            // NOVÝ: Michal Opitz (vedle Šlajcha)
+            {
+                name: "Michal Opitz",
+                url: "https://michalopitz.blogspot.com/",
+                category: "czech",
+                tags: ["Horor", "Ilustrace", "Temnota"],
+                desc: "Kreslíř s citem pro temnou atmosféru a detail. Známý např. spoluprací na sérii Kladivo na čarodějnice.",
+                color: "bg-gray-300",
+                image: "opitz.jpg"
             },
              {
                 name: "Karel Osoha",
@@ -276,7 +315,8 @@
                 category: "czech",
                 tags: ["Manga vliv", "Akce", "Návrat Krále Šumavy"],
                 desc: "Moderní dynamický styl ovlivněný mangou. Spoluautor trilogie Návrat Krále Šumavy.",
-                color: "bg-rose-100"
+                color: "bg-rose-100",
+                image: "osoha.jpg"
             },
             {
                 name: "Michal Suchánek",
@@ -284,7 +324,38 @@
                 category: "czech",
                 tags: ["Sci-fi", "Realismus", "Fotografické"],
                 desc: "Autor komiksů jako 'Děsivé radosti'. Velmi realistický, až filmový styl.",
-                color: "bg-stone-200"
+                color: "bg-stone-200",
+                image: "suchanek.jpg"
+            },
+            // NOVÝ: Jonáš Ledecký (vedle Suchánka)
+            {
+                name: "Jonáš Ledecký",
+                url: "https://jonasledecky.com/",
+                category: "czech",
+                tags: ["Akční", "Komiksové sešity", "KIWI"],
+                desc: "Autor akčních komiksů (KIWI) s dynamickou kresbou západního střihu a výraznými barvami.",
+                color: "bg-red-200",
+                image: "ledecky.jpg"
+            },
+            // NOVÝ: Viktor Svoboda (vedle Ledeckého)
+            {
+                name: "Viktor Svoboda",
+                url: "https://viktorsvoboda.tumblr.com/",
+                category: "czech",
+                tags: ["Linka", "Sci-fi", "Noir"],
+                desc: "Výrazný kreslíř s precizní, čistou linkou. Spoluautor komiksů jako Supro: Hrdinové na dluh.",
+                color: "bg-slate-200",
+                image: "svoboda.jpg"
+            },
+            // NOVÝ: Lenka Šimečková (vedle Svobody)
+            {
+                name: "Lenka Šimečková",
+                url: "https://llesim.tumblr.com/",
+                category: "czech",
+                tags: ["Horor", "Mýty", "Atmosféra"],
+                desc: "Ilustrátorka a autorka komiksů s nezaměnitelným, často strašidelným a poetickým stylem.",
+                color: "bg-rose-200",
+                image: "simeckova.jpg"
             },
              {
                 name: "Marek Pokorný",
@@ -292,7 +363,8 @@
                 category: "czech",
                 tags: ["Svatá Barbora", "Historie", "Ilustrace"],
                 desc: "Spoluautor oceňované 'Svaté Barbory'. Skvělá práce s atmosférou a prostředím.",
-                color: "bg-amber-100"
+                color: "bg-amber-100",
+                image: "pokorny.jpg"
             },
             {
                 name: "Richard Svitalský",
@@ -300,74 +372,19 @@
                 category: "czech",
                 tags: ["Humor", "Čtyřlístek", "Dobrodružství"],
                 desc: "Dlouholetý autor Čtyřlístku a dobrodružných komiksů pro mládež (Sedmikráskov).",
-                color: "bg-orange-50"
+                color: "bg-orange-50",
+                image: "svitalsky.jpg"
             },
-
-
-            // --- FOREIGN CREATORS (Výběr pro SŠ) ---
+            
+            // NOVÝ: Lukáš Fibrich (vedle Kopla)
             {
-                name: "Tom Gauld",
-                url: "https://www.tomgauld.com/",
-                category: "foreign",
-                tags: ["Literatura", "Věda", "Suchý humor"],
-                desc: "Geniální britský autor stripů pro The Guardian. Ideální pro studenty literatury a vědy. Minimalismus.",
-                color: "bg-sky-100"
-            },
-            {
-                name: "Strange Planet",
-                url: "https://www.instagram.com/nathanwpylestrangeplanet/",
-                category: "foreign",
-                tags: ["Satira", "Jazyk", "Mimozemšťané"],
-                desc: "Nathan W. Pyle ukazuje lidské zvyky očima doslovných mimozemšťanů. Skvělé pro angličtináře.",
-                color: "bg-indigo-200"
-            },
-            {
-                name: "Sarah's Scribbles",
-                url: "https://sarahcandersen.com/",
-                category: "foreign",
-                tags: ["Ze života", "Relatable", "Introverti"],
-                desc: "Sarah Andersen. Komiksy o dospívání, úzkostech a prokrastinaci, které zná každý student.",
-                color: "bg-fuchsia-100"
-            },
-            {
-                name: "Zen Pencils",
-                url: "https://www.zenpencils.com/",
-                category: "foreign",
-                tags: ["Motivace", "Citáty", "Vzdělávání"],
-                desc: "Gavin Aung Than adaptuje slavné citáty a projevy do epických komiksových příběhů.",
-                color: "bg-yellow-200"
-            },
-            {
-                name: "The Awkward Yeti",
-                url: "https://theawkwardyeti.com/",
-                category: "foreign",
-                tags: ["Biologie", "Srdce a Mozek", "Humor"],
-                desc: "Nick Seluk a jeho série 'Heart and Brain'. Vtipný boj mezi logikou a emocemi (a orgány).",
-                color: "bg-red-200"
-            },
-             {
-                name: "Boulet Corp",
-                url: "https://english.bouletcorp.com/",
-                category: "foreign",
-                tags: ["Francouzský", "Blog", "Imaginace"],
-                desc: "Jeden z nejlepších francouzských autorů. Dlouhé, vizuálně podmanivé scrollovací komiksy.",
-                color: "bg-orange-200"
-            },
-            {
-                name: "Poorly Drawn Lines",
-                url: "https://poorlydrawnlines.com/",
-                category: "foreign",
-                tags: ["Absurdní", "Zvířata", "Cynismus"],
-                desc: "Reza Farazmand. Krátké, absurdní a často existenciální stripy s klamavě jednoduchou kresbou.",
-                color: "bg-green-200"
-            },
-            {
-                name: "XKCD",
-                url: "https://xkcd.com/",
-                category: "foreign",
-                tags: ["Věda", "Matematika", "Geek"],
-                desc: "Webkomiks o romantice, sarkasmu, matematice a jazyce. Povinnost pro studenty IT a fyziky.",
-                color: "bg-gray-100"
+                name: "Lukáš Fibrich",
+                url: "https://www.fibrich.cz/",
+                category: "czech",
+                tags: ["Mourrison", "ABC", "Humor"],
+                desc: "Dlouholetý autor časopisu ABC. Jeho kocour Mourrison je ikonou českého komiksu pro mládež.",
+                color: "bg-lime-200",
+                image: "fibrich.jpg"
             },
 
             // --- INSTITUTIONS & OTHERS ---
@@ -377,15 +394,17 @@
                 category: "edu",
                 tags: ["Teorie", "Akademie", "Věda"],
                 desc: "Společné pracoviště ÚČL AV ČR a FF UP. Odborný pohled na komiks, publikace a konference.",
-                color: "bg-white"
+                color: "bg-white",
+                image: "ustav.jpg"
             },
             {
                 name: "Laydeez Do Comics",
-                url: "https://laydeezdocomics.wordpress.com/",
+                url: "https://pointa.cz/project/3f49dd47-cc02-11e8-8710-0a891f09afaa",
                 category: "edu",
                 tags: ["Komunita", "Ženy v komiksu", "Eventy"],
                 desc: "Mezinárodní platforma podporující autorky komiksů. Česká pobočka pořádá symposia.",
-                color: "bg-pink-50"
+                color: "bg-pink-50",
+                image: "laydeez.jpg"
             },
             {
                 name: "AARGH!",
@@ -393,7 +412,28 @@
                 category: "edu",
                 tags: ["Sborník", "Kultovní", "Český komiks"],
                 desc: "Legendární český komiksový sborník mapující to nejlepší z domácí alternativní scény.",
-                color: "bg-red-50"
+                color: "bg-red-50",
+                image: "aargh.jpg"
+            },
+            // NOVÝ: Tomáš a Tereza Kopečtí (vedle AARGH!)
+            {
+                name: "Little Color (Kopečtí)",
+                url: "https://www.littlecolor.com/",
+                category: "czech", // Ponecháno czech pro filtr, umístění vizuálně zde
+                tags: ["Koncept art", "Ilustrace", "Fantasy"],
+                desc: "Tvůrčí duo Tomáš Kopecký & Tereza Kopecká. Zaměřují se na concept art, ilustraci a vizuální development.",
+                color: "bg-purple-100",
+                image: "kopec.jpg"
+            },
+            // NOVÝ: FRAME Festival (před LUSTR)
+            {
+                name: "FRAME Festival",
+                url: "https://framefestival.cz/",
+                category: "edu",
+                tags: ["Festival", "Ziny", "Alternativa"],
+                desc: "Pražský festival komiksu, zinů a ilustrace. Zaměřuje se na autorskou tvorbu a malé náklady.",
+                color: "bg-orange-100",
+                image: "frame.jpg"
             },
             {
                 name: "LUSTR Festival",
@@ -401,7 +441,8 @@
                 category: "edu",
                 tags: ["Festival", "Ilustrace", "Komiks"],
                 desc: "Mezinárodní festival ilustrace a komiksu v Praze. Přehlídka toho nejčerstvějšího.",
-                color: "bg-yellow-50"
+                color: "bg-yellow-50",
+                image: "lustr.jpg"
             },
              {
                 name: "Moje tělo je moje",
@@ -409,7 +450,8 @@
                 category: "edu",
                 tags: ["Edukace", "Prevence", "Pro děti"],
                 desc: "Vzdělávací komiksy zaměřené na prevenci a osvětu v oblasti bezpečí dětí.",
-                color: "bg-blue-50"
+                color: "bg-blue-50",
+                image: "moje_telo.jpg"
             },
              {
                 name: "Komiksodějky",
@@ -417,7 +459,81 @@
                 category: "edu",
                 tags: ["Podcast", "Rozhovory", "Teorie"],
                 desc: "Podcast o komiksu. Rozhovory s autory, recenze a pohled do zákulisí tvorby.",
-                color: "bg-green-50"
+                color: "bg-green-50",
+                image: "komiksodejky.jpg"
+            },
+             // --- FOREIGN CREATORS ---
+            {
+                name: "Tom Gauld",
+                url: "https://www.tomgauld.com/",
+                category: "foreign",
+                tags: ["Literatura", "Věda", "Suchý humor"],
+                desc: "Geniální britský autor stripů pro The Guardian. Ideální pro studenty literatury a vědy. Minimalismus.",
+                color: "bg-sky-100",
+                image: "gauld.jpg"
+            },
+            {
+                name: "Strange Planet",
+                url: "https://www.instagram.com/nathanwpylestrangeplanet/",
+                category: "foreign",
+                tags: ["Satira", "Jazyk", "Mimozemšťané"],
+                desc: "Nathan W. Pyle ukazuje lidské zvyky očima doslovných mimozemšťanů. Skvělé pro angličtináře.",
+                color: "bg-indigo-200",
+                image: "strange_planet.jpg"
+            },
+            {
+                name: "Sarah's Scribbles",
+                url: "https://sarahcandersen.com/",
+                category: "foreign",
+                tags: ["Ze života", "Relatable", "Introverti"],
+                desc: "Sarah Andersen. Komiksy o dospívání, úzkostech a prokrastinaci, které zná každý student.",
+                color: "bg-fuchsia-100",
+                image: "sarah.jpg"
+            },
+            {
+                name: "Zen Pencils",
+                url: "https://www.zenpencils.com/",
+                category: "foreign",
+                tags: ["Motivace", "Citáty", "Vzdělávání"],
+                desc: "Gavin Aung Than adaptuje slavné citáty a projevy do epických komiksových příběhů.",
+                color: "bg-yellow-200",
+                image: "zen.jpg"
+            },
+            {
+                name: "The Awkward Yeti",
+                url: "https://theawkwardyeti.com/",
+                category: "foreign",
+                tags: ["Biologie", "Srdce a Mozek", "Humor"],
+                desc: "Nick Seluk a jeho série 'Heart and Brain'. Vtipný boj mezi logikou a emocemi (a orgány).",
+                color: "bg-red-200",
+                image: "yeti.jpg"
+            },
+             {
+                name: "Boulet Corp",
+                url: "https://www.bouletcorp.com/",
+                category: "foreign",
+                tags: ["Francouzský", "Blog", "Imaginace"],
+                desc: "Jeden z nejlepších francouzských autorů. Dlouhé, vizuálně podmanivé scrollovací komiksy.",
+                color: "bg-orange-200",
+                image: "corp.jpg"
+            },
+            {
+                name: "Poorly Drawn Lines",
+                url: "https://poorlydrawnlines.com/",
+                category: "foreign",
+                tags: ["Absurdní", "Zvířata", "Cynismus"],
+                desc: "Reza Farazmand. Krátké, absurdní a často existenciální stripy s klamavě jednoduchou kresbou.",
+                color: "bg-green-200",
+                image: "poorly.jpg"
+            },
+            {
+                name: "XKCD",
+                url: "https://xkcd.com/",
+                category: "foreign",
+                tags: ["Věda", "Matematika", "Geek"],
+                desc: "Webkomiks o romantice, sarkasmu, matematice a jazyce. Povinnost pro studenty IT a fyziky.",
+                color: "bg-gray-100",
+                image: "xkcd.jpg"
             }
         ];
 
@@ -427,7 +543,6 @@
             const searchInput = document.getElementById('searchInput');
             const noResults = document.getElementById('noResults');
 
-            // Render Function
             function renderCards(filter = 'all', search = '') {
                 gridContainer.innerHTML = '';
                 
@@ -449,12 +564,10 @@
                     const card = document.createElement('a');
                     card.href = item.url;
                     card.target = "_blank";
-                    card.className = `card block relative h-full flex flex-col ${item.color} p-6 rounded-none text-black hover:no-underline group`;
+                    card.className = `card block relative h-full flex flex-col ${item.color} p-6 rounded-none text-black hover:no-underline group overflow-hidden`;
                     
-                    // Construct HTML
                     let tagsHtml = item.tags.map(tag => `<span class="tag bg-black text-white px-2 py-1 mr-2 mb-2 inline-block rounded-sm">${tag}</span>`).join('');
                     
-                    // Initial Letter Avatar
                     const initials = item.name.split(' ').map(n => n[0]).join('').substring(0,2);
 
                     card.innerHTML = `
@@ -467,8 +580,12 @@
                         
                         <h3 class="text-2xl font-bold mb-2 leading-tight">${item.name}</h3>
                         
-                        <div class="speech-bubble p-3 mb-4 text-sm font-medium border-black flex-grow">
+                        <div class="speech-bubble p-3 mb-4 text-sm font-medium border-black">
                             ${item.desc}
+                        </div>
+
+                        <div class="card-image-container mb-4">
+                            <img src="images/${item.image}" alt="Ukázka díla - ${item.name}" class="card-image" loading="lazy">
                         </div>
                         
                         <div class="mt-auto">
@@ -478,17 +595,14 @@
                     gridContainer.appendChild(card);
                 });
 
-                // Safe initialization of icons
                 if (typeof lucide !== 'undefined') {
                     lucide.createIcons();
                 }
             }
 
-            // Event Listeners
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     filterBtns.forEach(b => b.classList.remove('active', 'bg-black', 'text-white'));
-                    // Reset styles
                     filterBtns.forEach(b => {
                         if(!b.classList.contains('active')) {
                             b.style.transform = "scale(1)";
@@ -507,10 +621,8 @@
                 renderCards(activeFilter, e.target.value);
             });
 
-            // Initial Render
             renderCards();
 
-            // Additional check for Lucide if it loads late
             if (typeof lucide === 'undefined') {
                 window.addEventListener('load', () => {
                     if (typeof lucide !== 'undefined') {
