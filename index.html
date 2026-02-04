@@ -159,9 +159,9 @@
             class="footer-link">
             <span data-translate-key="footerRights">© Jaroslav Svoboda 2026</span></a></strong>, data vycházejí z dostupných zdrojů na internetu.</p>
             
-            <div id="counter-wrapper" class="mt-4 flex justify-center items-center gap-2 text-xs text-gray-400 hover:text-white font-sans opacity-50 transition-all duration-1000" style="font-family: 'Montserrat', sans-serif;">
+            <div id="counter-wrapper" class="mt-4 flex justify-center items-center gap-2 text-xs text-gray-400 hover:text-white font-sans transition-all duration-300" style="font-family: 'Montserrat', sans-serif;">
                 <i data-lucide="eye" class="w-3 h-3"></i>
-                <span>Zobrazení: <span id="visit-count">...</span></span>
+                <span title="Unikátní návštěvy">Zobrazení: <span id="visit-count">Načítám...</span></span>
             </div>
             </div>
     </footer>
@@ -717,21 +717,18 @@
             const countElement = document.getElementById('visit-count');
             const wrapperElement = document.getElementById('counter-wrapper');
             
-            // Namespace a Key jsou odvozeny od tvé domény, aby to bylo unikátní
-            const namespace = 'svoboda-koduje.github.io';
-            const key = 'komiksovy_rozcestnik_v1'; 
-
-            fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
-                .then(res => res.json())
-                .then(res => {
-                    countElement.innerText = res.value;
-                    // Zobrazíme element až po načtení čísla, aby to neprobliklo
+            // Použijeme unikátní namespace pro váš web
+            // Endpoint /up automaticky přičte návštěvu
+            fetch("https://api.counterapi.dev/v1/komiksovy_rozcestnik_svoboda/visits/up")
+                .then(response => response.json())
+                .then(data => {
+                    countElement.innerText = data.count;
+                    // Pokud by byl element skrytý, zobrazíme ho
                     wrapperElement.classList.remove('opacity-0');
-                    wrapperElement.classList.add('opacity-50', 'hover:opacity-100');
                 })
-                .catch(err => {
-                    console.log('CounterAPI error:', err);
-                    // V případě chyby (např. blokovač reklam) počitadlo zůstane neviditelné (opacity-0)
+                .catch(error => {
+                    console.error("Chyba počitadla:", error);
+                    countElement.innerText = "offline"; 
                 });
         }
 
