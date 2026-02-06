@@ -185,6 +185,8 @@
                 name: "Štěpánka Jislová",
                 url: "https://www.jislova.com/",
                 video: "https://www.youtube.com/watch?v=jqBS0J5qbrs&t=3s",
+                id: "stepanka-jislova",
+                hasProfile: true,
                 category: "czech",
                 tags: ["Grafický román", "Ilustrace", "Autobiografie"],
                 desc: "Výrazná autorka grafických románů (Bez vlasů, Srdcovka). Moderní vizuální styl a silná témata. Detailní medailonek je <a href=https://gamesmag.cz/2021/09/22/cesti-komiksovi-kresliri-3-stepanka-jislova/ target=_blank class=hover:underline text-white><strong>zde</strong></a>.",
@@ -769,15 +771,22 @@
 
                 filteredData.forEach(item => {
                     const card = document.createElement('a');
-                    card.href = item.url;
-                    card.target = "_blank";
+                    if (item.hasProfile) {
+    // ANO -> Jdi na vnitřní stránku medailonku
+    card.href = `medailonek.html?id=${item.id}`;
+    card.target = "_self"; // Otevře se ve stejném okně (nebo dej "_blank" pro nové)
+} else {
+    // NE -> Jdi na externí URL (jak to bylo dřív)
+    card.href = item.url;
+    card.target = "_blank"; // Externí weby chceme v novém okně
+}
                     card.className = `card block relative h-full flex flex-col ${item.color} p-6 rounded-none text-black hover:no-underline group overflow-hidden`;
                     
                     let tagsHtml = item.tags.map(tag => `<span class="tag bg-black text-white px-2 py-1 mr-2 mb-2 inline-block rounded-sm">${tag}</span>`).join('');
                     
                     card.innerHTML = `
     <div class="flex justify-between items-start mb-4">
-        <i data-lucide="external-link" class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+        <i data-lucide="${item.hasProfile ? 'user' : 'external-link'}" class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity"></i>
     </div>
     
     <h3 class="text-3xl font-bold mb-3 leading-tight tracking-widest -mt-3">${item.name}</h3>
