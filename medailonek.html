@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vizuální komiksový rozcestník</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@400;600;800&family=Neucha&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@400;600;800&family=Neucha&family=Patrick+Hand&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js"></script>
     <style>
         body {
@@ -19,6 +19,10 @@
             font-family: 'Bangers', cursive;
             letter-spacing: 1px;
         }
+        .tag-font {
+    font-family: 'Patrick Hand', cursive;
+    letter-spacing: 0.5px; /* Lehce zlepší čitelnost na mobilu */
+}
         .filter-btn {
             border: 2px solid #000;
             font-family: 'Montserrat', sans-serif;
@@ -99,7 +103,7 @@
                 <header class="mb-8 text-center border-b-4 border-black pb-6">
                     <h1 class="text-5xl md:text-7xl comic-font mb-4">${author.name}</h1>
                     <div class="flex justify-center gap-2 mb-4">
-                        ${author.tags.map(tag => `<span class="bg-yellow-300 border-2 border-black px-3 py-1 font-bold text-sm transform rotate-[-2deg]">${tag}</span>`).join('')}
+                        ${author.tags.map(tag => `<span class="tag-font bg-yellow-300 border-2 border-black px-3 py-1 font-bold text-sm transform rotate-[-2deg]">${tag}</span>`).join('')}
                     </div>
                 </header>
 
