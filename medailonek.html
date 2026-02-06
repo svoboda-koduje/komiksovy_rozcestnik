@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vizuální komiksový rozcestník</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@400;600;800&family=Neucha&display=swap" rel="stylesheet">    <script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js"></script>
+    <style>
+        body {
+            font-family: 'Neucha', cursive;
+            font-size: 1.2rem;
+            background-color: #f0f4f8;
+            background-image: radial-gradient(#cbd5e0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        h1, h2, h3, .comic-font, .font-comic {
+            font-family: 'Bangers', cursive;
+            letter-spacing: 1px;
+        }
+        .card {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 3px solid #000;
+            box-shadow: 5px 5px 0px #000;
+        }
+        .card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px #000;
+        }
+        .card:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000;
+        }
+        .tag {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.65rem;
+        }
+        .search-input {
+            border: 3px solid #000;
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+        .search-input:focus {
+            box-shadow: 5px 5px 0px #000;
+            outline: none;
+        }
+        .filter-btn {
+            border: 2px solid #000;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background-color: #000;
+            color: #fff;
+            transform: scale(1.05);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .speech-bubble {
+            position: relative;
+            background: #fff;
+            border: 3px solid #000;
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border: 20px solid transparent;
+            border-top-color: #000;
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -10px;
+            margin-bottom: -20px;
+        }
+        .card-image-container {
+            border: 3px solid #000;
+            overflow: hidden;
+            aspect-ratio: 1 / 1;
+        }
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .card:hover .card-image {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#f0f4f8]">
+    <nav class="p-4 container mx-auto">
+        <a href="index.html" class="filter-btn px-4 py-2 bg-white text-black border-2 border-black rounded-full">← Zpět na rozcestník</a>
+    </nav>
+
+    <main id="profile-container" class="container mx-auto px-4 py-8 max-w-4xl bg-white border-4 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] my-8">
+        </main>
+    
+    <script src="data.js"></script>
+    <script>
+        // 1. Získat ID z URL
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+
+        // 2. Najít autora v datech
+        const author = comicsData.find(item => item.id === id);
+
+        // 3. Vykreslit obsah (pokud autor existuje)
+        const container = document.getElementById('profile-container');
+        
+        if (author) {
+            // Zde vytvoříte HTML strukturu inspirovanou GamesMag
+            container.innerHTML = `
+                <header class="mb-8 text-center border-b-4 border-black pb-6">
+                    <h1 class="text-5xl md:text-7xl comic-font mb-4">${author.name}</h1>
+                    <div class="flex justify-center gap-2 mb-4">
+                        ${author.tags.map(tag => `<span class="bg-yellow-300 border-2 border-black px-3 py-1 font-bold text-sm transform rotate-[-2deg]">${tag}</span>`).join('')}
+                    </div>
+                </header>
+
+                <div class="grid md:grid-cols-3 gap-8 mb-12">
+                    <div class="md:col-span-1">
+                        <div class="card-image-container rotate-2 border-4 border-black shadow-[5px_5px_0px_#000]">
+                            <img src="images/${author.image}" class="w-full h-full object-cover">
+                        </div>
+                        <a href="${author.url}" target="_blank" class="block mt-4 text-center bg-black text-white py-3 font-bold hover:bg-gray-800 transition">WEB AUTORA</a>
+                    </div>
+                    
+                    <div class="md:col-span-2 font-sans text-lg leading-relaxed">
+                        <h2 class="text-3xl comic-font mb-4 border-l-8 border-yellow-400 pl-3">Bio</h2>
+                        <p class="mb-6">${author.bio || author.desc}</p> </div>
+                </div>
+
+                ${author.interview ? `
+                <section class="mb-12">
+                    <h2 class="text-4xl comic-font mb-6 text-center bg-black text-white p-2 transform -rotate-1 inline-block">ROZHOVOR</h2>
+                    <div class="space-y-6">
+                        ${author.interview.map(qa => `
+                            <div class="speech-bubble p-6 bg-gray-50">
+                                <p class="font-bold text-xl mb-2 text-blue-900">${qa.question}</p>
+                                <p class="text-gray-800 italic">${qa.answer}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+                ` : ''}
+            `;
+        } else {
+            container.innerHTML = "<h1>Autor nenalezen</h1>";
+        }
+    </script>
+</body>
