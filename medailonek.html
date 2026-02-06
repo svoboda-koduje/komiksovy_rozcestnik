@@ -76,7 +76,10 @@
 </head>
 <body class="min-h-screen flex flex-col bg-[#f0f4f8]">
     <nav class="p-4 container mx-auto">
-        <a href="index.html" class="filter-btn px-4 py-2 bg-white text-black border-2 border-black rounded-full">← Zpět na rozcestník</a>
+        <a href="index.html" class="filter-btn px-4 py-2 bg-white text-black border-2 border-black rounded-full inline-flex items-center gap-2">
+    <span class="text-3xl leading-none pb-1">←</span>
+    <span>Zpět na rozcestník</span>
+</a>
     </nav>
 
     <main id="profile-container" class="container mx-auto px-4 py-8 max-w-4xl bg-white border-4 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] my-8">
@@ -85,6 +88,15 @@
     <div id="lightbox">
         <img id="lightbox-img" src="" alt="Zvětšený obrázek">
     </div>
+    <div id="backToTop" class="fixed bottom-20 right-8 z-50 cursor-pointer transition-all duration-300 transform translate-y-20 opacity-0" role="button" aria-label="Zpět nahoru">
+    <svg width="60" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" 
+         class="drop-shadow-[5px_5px_0px_rgba(0,0,0,1)]">
+        <path d="M12 2L3 11H8V22H16V11H21L12 2Z" 
+              class="fill-yellow-400 hover:fill-yellow-500 transition-colors duration-200 stroke-black stroke-[2.5]" 
+              stroke-linecap="round" 
+              stroke-linejoin="round"/>
+    </svg>
+</div>
 
     <script src="data.js"></script>
     <script>
@@ -145,6 +157,28 @@
         } else {
             container.innerHTML = "<h1>Autor nenalezen</h1>";
         }
+        
+// --- Back to Top Logic ---
+    const backToTopBtn = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', () => {
+        // Zobrazí tlačítko, pokud sjedete o více než 300px dolů
+        if (window.scrollY > 300) {
+            backToTopBtn.classList.remove('opacity-0', 'invisible');
+            backToTopBtn.classList.add('opacity-100', 'visible');
+        } else {
+            backToTopBtn.classList.add('opacity-0', 'invisible');
+            backToTopBtn.classList.remove('opacity-100', 'visible');
+        }
+    });
+
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // Plynulé scrollování
+        });
+    });
+    // --- End Back to Top Logic ---
     </script>
 </body>
 </html>
